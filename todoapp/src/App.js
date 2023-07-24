@@ -98,12 +98,9 @@ class App extends Component {
      
     return (
       <div className="App">
-
         <h2>Web Notes</h2>
-
         <div className="form-fields">
           <Input className='title-input' id="title" placeholder="Title" />
-          
           <Textarea
             className='description-input'
             id="description"
@@ -112,7 +109,6 @@ class App extends Component {
             rows="8" // Adjust the number of rows to set the height
             onChange={this.handleDescriptionChange} // Call the function when input changes
           />
-
           <div className='add-delete-all-container'>
             <Grid.Container gap={2}>
               <Grid>
@@ -125,31 +121,9 @@ class App extends Component {
           </div>
           {this.state.descriptionError && <p className="error">Description cannot exceed 500 characters.</p>}
         </div>
-
-
         <div className="note-list">
           {notes.map(note =>
             <div className="note-item-container" key={note.NoteId}>
-
-              {/* <Grid.Container gap={3}>
-                <Grid sm={2} md={12}>
-                  <Card css={{ mw: "330px" }}>
-                    <Card.Header>
-                      <h3 className='note-title'>{note.Title}</h3>
-                    </Card.Header>
-                    <Card.Divider />
-                    <Card.Body css={{ py: "$10" }}>
-                      <Text>
-                        {note.Description}
-                      </Text>
-                    </Card.Body>
-                    <Card.Divider />
-                    <Button color="warning" auto onClick={() => this.deleteNote(note.NoteId)}>Delete</Button>
-                  </Card>
-                </Grid>
-
-              </Grid.Container> */}
-
               <Grid.Container gap={2}>
                 <Grid >
                   <Card css={{ mw: "550px" }}>
@@ -170,7 +144,6 @@ class App extends Component {
                   </Card>
                 </Grid>
               </Grid.Container>
-
             </div>
           ).reverse()}
         </div>
@@ -178,7 +151,6 @@ class App extends Component {
     );
   }
 }
-
 export default App;
 
 
