@@ -12,6 +12,13 @@ code {
     monospace;
 }
 
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: lemonchiffon; /* Replace with your desired background color */
+}
+
 textarea {
   resize: vertical; /* Allow vertical resizing of textarea */
   height: auto; /* Reset the height to auto to adjust based on the content */
@@ -35,13 +42,13 @@ textarea {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 15px;
+  margin-bottom: 15px;
 }
 
 .note-list {
   display: flex;
   flex-direction: column;
-  align-items: center; 
+  align-items: center;
 }
 
 .todo-card {
