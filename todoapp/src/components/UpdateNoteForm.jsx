@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Textarea, Input } from '@nextui-org/react';
+import {Button, Textarea, Input, Row, Spacer, Grid, Loading} from '@nextui-org/react';
 import '../App.css';
 import { useNavigate } from 'react-router-dom';
 import axios from "axios";
@@ -22,6 +22,10 @@ const UpdateNoteForm = ({ noteId, BASE_URL }) => {
 		}
 	};
 
+	const navigateHome = () => {
+		navigate('/');
+	};
+
 	const updateNote = () => {
 		const data = new FormData();
 		data.set('id', noteId);
@@ -33,7 +37,7 @@ const UpdateNoteForm = ({ noteId, BASE_URL }) => {
 			.then((response) => {
 				console.log('Update response:', response.data);
 				alert(response.data);
-				navigate('/');
+				navigateHome();
 			})
 			.catch((error) => {
 				alert('Error updating note: ' + error);
@@ -50,7 +54,7 @@ const UpdateNoteForm = ({ noteId, BASE_URL }) => {
 			})
 			.then((data) => {
 				if (data && data.length > 0) {
-					const note = data[0]; // Assuming only one note is returned
+					const note = data[0];
 					setTitle(note.Title);
 					setDescription(note.Description);
 				}
@@ -63,37 +67,49 @@ const UpdateNoteForm = ({ noteId, BASE_URL }) => {
 	}, [noteId]);
 
 	if (loading) {
-		return <p>Loading note data...</p>;
+		return <Loading size="lg" />;
 	}
 
 	return (
-		<div className="UpdateNoteForm">
-			<div>
-				<Input
-					id="title"
-					value={title}
-					onChange={(event) => setTitle(event.target.value)}
-					size="lg"
-					placeholder="Title"
-					css={{ marginBottom: '25px' }}
-				/>
-				<Textarea
-					id="description"
-					className="description-input"
-					value={description}
-					onChange={handleDescriptionChange}
-					placeholder="Description"
-					cols="50"
-					rows="8"
-				/>
-				{descriptionError && (
-					<p className="error">Description cannot exceed 500 characters.</p>
-				)}
-				<Button color="abort">Cancel</Button>
-				<Button color="primary" onPress={updateNote}>
-					Update
-				</Button>
-			</div>
+		<div className="form-fields">
+			<Grid.Container css={{width: '750px'}} gap={2} justify="center">
+				<Grid>
+					<Input
+						id="title"
+						size="md"
+						value={title}
+						placeholder="Title"
+						css={{
+							width: '465px',
+						}}
+						onChange={(event) => setTitle(event.target.value)}
+					/>
+				</Grid>
+				<Grid>
+					<Textarea
+						id="description"
+						className="description-input"
+						css={{ marginBottom: '15px' }}
+						value={description}
+						onChange={handleDescriptionChange}
+						placeholder="Description"
+						cols="50"
+						rows="8"
+					/>
+				</Grid>
+				<Grid>
+					{descriptionError && (
+						<p className="error">Description cannot exceed 500 characters.</p>
+					)}
+					<Row css={{ width: '415px' }} justify="flex-center">
+						<Button color="primary" onPress={updateNote}>
+							Update
+						</Button>
+						<Spacer css={{ marginTop: '15px' }} ></Spacer>
+						<Button color="abort" onPress={navigateHome}>Cancel</Button>
+					</Row>
+				</Grid>
+			</Grid.Container>
 		</div>
 	);
 };

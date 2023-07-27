@@ -1,20 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Grid, Textarea, Input, Card, Text, Row } from '@nextui-org/react';
+import { Button, Grid, Textarea, Input, Card, Text, Row, Loading } from '@nextui-org/react';
 import {useNavigate} from "react-router-dom";
 
 const ShowNoteList = ({ BASE_URL }) => {
 	const [notes, setNotes] = useState([]);
 	const [descriptionError, setDescriptionError] = useState(false);
+	const [loading, setLoading] = useState(true);
 	const navigate = useNavigate();
-
-	const handleEditNote = (note) => {
-		console.log(note.NoteId);
-		navigate(`/edit/${note.NoteId}`) // Ensure that 'note' object is passed to the 'UpdateNoteForm' component
-	};
 
 	useEffect(() => {
 		refreshNotes();
-	}, []);
+	});
+
+	const handleEditNote = (note) => {
+		navigate(`/edit/${note.NoteId}`)
+	};
 
 	const clearInputFields = () => {
 		document.getElementById('title').value = '';
@@ -36,6 +36,7 @@ const ShowNoteList = ({ BASE_URL }) => {
 			.then((data) => {
 				console.log(data);
 				setNotes(data);
+				setLoading(false);
 			})
 			.catch((error) => {
 				alert('Error getting notes:' + error);
@@ -43,8 +44,8 @@ const ShowNoteList = ({ BASE_URL }) => {
 	};
 
 	const addNote = () => {
-		var title = document.getElementById('title').value;
-		var description = document.getElementById('description').value;
+		const title = document.getElementById('title').value;
+		const description = document.getElementById('description').value;
 		const data = new FormData();
 
 		data.append('title', title);
@@ -70,8 +71,8 @@ const ShowNoteList = ({ BASE_URL }) => {
 			method: 'DELETE',
 		})
 			.then((res) => res.json())
-			.then((result) => {
-				alert(result);
+			.then((response) => {
+				alert(response)
 				refreshNotes();
 			})
 			.catch((error) => {
@@ -79,12 +80,12 @@ const ShowNoteList = ({ BASE_URL }) => {
 			});
 	};
 
-	const deletAllNotes = () => {
+	const deleteAllNotes = () => {
+
 		fetch(BASE_URL + 'api/TodoApp/DeleteAllNotes', {
 			method: 'DELETE',
 		})
 			.then(() => {
-				alert('All notes deleted successfully');
 				refreshNotes();
 			})
 			.catch((error) => {
@@ -92,19 +93,28 @@ const ShowNoteList = ({ BASE_URL }) => {
 			});
 	};
 
+	if (loading) {
+		return <p>Loading Please Wait...</p>;
+	}
+
 	return (
 		<div className="ShowNoteList">
 			<h2>Web Notes</h2>
 			<div className="form-fields">
 				<Input
 					id="title"
-					size="lg"
+					size="md"
 					placeholder="Title"
 					css={{
 						marginBottom: '25px',
-						width: '465px',
+						minWidth: '400px',
 					}}
 				/>
+				{/*<div id="confirmationDialog" className="hidden">*/}
+				{/*	<p>Are you sure you want to delete all notes?</p>*/}
+				{/*	<Button onClick={deleteAllNotes()}>OK</Button>*/}
+				{/*	<Button onClick={hideConfirmationDialog()}>Cancel</Button>*/}
+				{/*</div>*/}
 				<Textarea
 					className="description-input"
 					id="description"
@@ -115,46 +125,71 @@ const ShowNoteList = ({ BASE_URL }) => {
 				/>
 				<div className="add-delete-all-container">
 					<Row css={{ width: '465px' }} justify="flex-end">
-						<Button css={{ marginRight: '15px' }} color="success" auto onClick={addNote}>
-							Add
-						</Button>
-						<Button color="warning" auto onClick={deletAllNotes}>
-							Delete All
-						</Button>
+						<div className="add-button">
+							<Button css={{ marginRight: '15px' }} color="success" auto onPress={addNote}>
+								Add
+							</Button>
+						</div>
+						<div className="delete-all-button">
+							<Button color="warning" auto onPress={deleteAllNotes}>
+								Delete All
+							</Button>
+						</div>
 					</Row>
 				</div>
 				{descriptionError && <p className="error">Description cannot exceed 500 characters.</p>}
 			</div>
 
+
 			<div className="note-list">
-				{notes.map((note) => (
-					<div className="note-item-container" key={note.NoteId}>
-						<Grid.Container gap={2}>
-							<Grid>
-								<Card css={{ mw: '550px' }}>
-									<Card.Header>
-										<Text b>{note.Title}</Text>
-									</Card.Header>
-									<Card.Divider />
-									<Card.Body css={{ py: '$10' }}>
-										<p className="note-text">{note.Description}</p>
-									</Card.Body>
-									<Card.Divider />
-									<Card.Footer>
-										<Row justify="flex-end" css={{ marginRight: '25px' }}>
-											<Button size="sm" light onClick={() => handleEditNote(note)}>
-												Edit
-											</Button>
-											<Button size="sm" color="error" auto onClick={() => deleteNote(note.NoteId)}>
-												Delete
-											</Button>
-										</Row>
-									</Card.Footer>
-								</Card>
-							</Grid>
-						</Grid.Container>
-					</div>
-				))}
+				{loading ? (
+					<Loading size="lg" />
+				) : (
+					<ul>
+						{notes.map((note) => (
+							<div className="note-item-container" key={note.NoteId}>
+								<Grid.Container gap={2}>
+									<Grid>
+										<Card css={{
+											maxWidth: "550px",
+											minWidth: "350px"
+										}}>
+											<Card.Header>
+												<Text b>{note.Title}</Text>
+											</Card.Header>
+											<Card.Divider />
+											<Card.Body css={{ py: '$10' }}>
+												<p className="note-text">{note.Description}</p>
+											</Card.Body>
+											<Card.Divider />
+											<Card.Footer>
+												<Row justify="flex-end" css={{ marginRight: '25px' }}>
+													<div className="edit-button">
+														<Button
+															size="sm"
+															light
+															onPress={() => handleEditNote(note)}>
+															Edit
+														</Button>
+													</div>
+													<div className="delete-button">
+														<Button
+															size="sm"
+															color="error"
+															auto
+															onPress={() => deleteNote(note.NoteId)}>
+															Delete
+														</Button>
+													</div>
+												</Row>
+											</Card.Footer>
+										</Card>
+									</Grid>
+								</Grid.Container>
+							</div>
+						))}
+					</ul>
+				)}
 			</div>
 		</div>
 	);

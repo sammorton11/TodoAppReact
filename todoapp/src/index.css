@@ -16,7 +16,7 @@ html, body, #root {
   height: 100%;
   margin: 0;
   padding: 0;
-  background-color: lemonchiffon; /* Replace with your desired background color */
+  background-color: azure; /* Replace with your desired background color */
 }
 
 textarea {
@@ -59,6 +59,21 @@ textarea {
   padding: 10px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
+.note-item-container:hover {
+  transform: scale(1.05);
+}
+.add-button:hover {
+  transform: scale(1.05);
+}
+.delete-button:hover {
+  transform: scale(1.05);
+}
+.delete-all-button:hover {
+  transform: scale(1.05);
+}
+.edit-button:hover {
+  transform: scale(1.05);
+}
 
 .note-title {
   align-self: center;
@@ -68,40 +83,13 @@ textarea {
 }
 .note-text {
   padding-right: 15px;
-}
-.delete-button-container {
-  text-align: center;
-}
-.delete-button {
-  background-color: #f44336;
-  color: white;
-  border: none;
-  padding: 5px 10px;
-  border-radius: 3px;
-  cursor: pointer;
+  margin: 10px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .add-delete-all-container {
   padding: 15px;
 }
 
-.add-button {
-  background-color: #0fcb32;
-  color: white;
-  border: none;
-  padding: 5px 10px;
-  border-radius: 3px;
-  cursor: pointer;
-  width: 150px;
-}
 
-.delete-all-button {
-  background-color: #f44336;
-  color: white;
-  border: none;
-  padding: 5px 10px;
-  border-radius: 3px;
-  cursor: pointer;
-  width: 150px;
-  margin: 15px;
-}
