@@ -8,7 +8,6 @@ const UpdateNotePage = ({ BASE_URL }) => {
 	return (
 		<div className="UpdateNotePage">
 			<h1>Edit Note</h1>
-			{/* Pass the "id" as noteId to the UpdateNoteForm */}
 			<UpdateNoteForm BASE_URL={BASE_URL} noteId={id} />
 		</div>
 	);

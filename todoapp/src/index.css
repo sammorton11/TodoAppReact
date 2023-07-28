@@ -16,7 +16,8 @@ html, body, #root {
   height: 100%;
   margin: 0;
   padding: 0;
-  background-color: azure; /* Replace with your desired background color */
+  /*background-color: azure; !* Replace with your desired background color *!*/
+  background-color: thistle;
 }
 
 textarea {
@@ -60,7 +61,7 @@ textarea {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 .note-item-container:hover {
-  transform: scale(1.05);
+  transform: scale(1.01);
 }
 .add-button:hover {
   transform: scale(1.05);

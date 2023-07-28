@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Grid, Textarea, Input, Card, Text, Row, Loading } from '@nextui-org/react';
+import {Button, Grid, Textarea, Input, Card, Text, Row, Loading, Navbar} from '@nextui-org/react';
 import {useNavigate} from "react-router-dom";
+import {wait} from "@testing-library/user-event/dist/utils";
 
 const ShowNoteList = ({ BASE_URL }) => {
 	const [notes, setNotes] = useState([]);
@@ -9,7 +10,7 @@ const ShowNoteList = ({ BASE_URL }) => {
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		refreshNotes();
+		wait(500).then( _ => refreshNotes());
 	});
 
 	const handleEditNote = (note) => {
@@ -57,9 +58,13 @@ const ShowNoteList = ({ BASE_URL }) => {
 		})
 			.then((res) => res.json())
 			.then((result) => {
-				alert(result);
-				refreshNotes();
-				clearInputFields();
+				if (title === "" || description === "") {
+					alert("Please enter a title and a description")
+				} else {
+					alert(result);
+					refreshNotes();
+					clearInputFields();
+				}
 			})
 			.catch((error) => {
 				alert(error);
@@ -81,7 +86,6 @@ const ShowNoteList = ({ BASE_URL }) => {
 	};
 
 	const deleteAllNotes = () => {
-
 		fetch(BASE_URL + 'api/TodoApp/DeleteAllNotes', {
 			method: 'DELETE',
 		})
@@ -93,12 +97,25 @@ const ShowNoteList = ({ BASE_URL }) => {
 			});
 	};
 
-	if (loading) {
-		return <p>Loading Please Wait...</p>;
-	}
+	if (loading) { return <Loading size="lg" />; }
 
 	return (
 		<div className="ShowNoteList">
+			<Navbar isBordered variant={'black'} css={{backgroundColor: 'inherit'}}>
+				<Navbar.Brand>
+					<Text b color="inherit" hideIn="xs">
+						Sam Morton
+					</Text>
+				</Navbar.Brand>
+				<Navbar.Content>
+					<Navbar.Link color="inherit" href="https://www.linkedin.com/in/samuel-morton-a7b82a232/">
+						LinkedIn
+					</Navbar.Link>
+					<Navbar.Link color="inherit" href="https://github.com/sammorton11">
+						GitHub
+					</Navbar.Link>
+				</Navbar.Content>
+			</Navbar>
 			<h2>Web Notes</h2>
 			<div className="form-fields">
 				<Input
@@ -107,18 +124,16 @@ const ShowNoteList = ({ BASE_URL }) => {
 					placeholder="Title"
 					css={{
 						marginBottom: '25px',
-						minWidth: '400px',
+						minWidth: '460px',
 					}}
 				/>
-				{/*<div id="confirmationDialog" className="hidden">*/}
-				{/*	<p>Are you sure you want to delete all notes?</p>*/}
-				{/*	<Button onClick={deleteAllNotes()}>OK</Button>*/}
-				{/*	<Button onClick={hideConfirmationDialog()}>Cancel</Button>*/}
-				{/*</div>*/}
 				<Textarea
 					className="description-input"
 					id="description"
 					placeholder="Description"
+					css={{
+						minWidth: '465px'
+					}}
 					cols="50"
 					rows="8"
 					onChange={handleDescriptionChange}
@@ -131,7 +146,7 @@ const ShowNoteList = ({ BASE_URL }) => {
 							</Button>
 						</div>
 						<div className="delete-all-button">
-							<Button color="warning" auto onPress={deleteAllNotes}>
+							<Button color="error" auto onPress={deleteAllNotes}>
 								Delete All
 							</Button>
 						</div>
@@ -142,54 +157,48 @@ const ShowNoteList = ({ BASE_URL }) => {
 
 
 			<div className="note-list">
-				{loading ? (
-					<Loading size="lg" />
-				) : (
-					<ul>
-						{notes.map((note) => (
-							<div className="note-item-container" key={note.NoteId}>
-								<Grid.Container gap={2}>
-									<Grid>
-										<Card css={{
-											maxWidth: "550px",
-											minWidth: "350px"
-										}}>
-											<Card.Header>
-												<Text b>{note.Title}</Text>
-											</Card.Header>
-											<Card.Divider />
-											<Card.Body css={{ py: '$10' }}>
-												<p className="note-text">{note.Description}</p>
-											</Card.Body>
-											<Card.Divider />
-											<Card.Footer>
-												<Row justify="flex-end" css={{ marginRight: '25px' }}>
-													<div className="edit-button">
-														<Button
-															size="sm"
-															light
-															onPress={() => handleEditNote(note)}>
-															Edit
-														</Button>
-													</div>
-													<div className="delete-button">
-														<Button
-															size="sm"
-															color="error"
-															auto
-															onPress={() => deleteNote(note.NoteId)}>
-															Delete
-														</Button>
-													</div>
-												</Row>
-											</Card.Footer>
-										</Card>
-									</Grid>
-								</Grid.Container>
-							</div>
-						))}
-					</ul>
-				)}
+				{notes.map((note) => (
+					<div className="note-item-container" key={note.NoteId}>
+						<Grid.Container gap={2}>
+							<Grid>
+								<Card css={{
+									maxWidth: "550px",
+									minWidth: "350px"
+								}}>
+									<Card.Header>
+										<Text b>{note.Title}</Text>
+									</Card.Header>
+									<Card.Divider />
+									<Card.Body css={{ py: '$10' }}>
+										<p className="note-text">{note.Description}</p>
+									</Card.Body>
+									<Card.Divider />
+									<Card.Footer>
+										<Row justify="flex-end" css={{ marginRight: '25px' }}>
+											<div className="edit-button">
+												<Button
+													size="sm"
+													light
+													onPress={() => handleEditNote(note)}>
+													Edit
+												</Button>
+											</div>
+											<div className="delete-button">
+												<Button
+													size="sm"
+													color="error"
+													auto
+													onPress={() => deleteNote(note.NoteId)}>
+													Delete
+												</Button>
+											</div>
+										</Row>
+									</Card.Footer>
+								</Card>
+							</Grid>
+						</Grid.Container>
+					</div>
+				))}
 			</div>
 		</div>
 	);

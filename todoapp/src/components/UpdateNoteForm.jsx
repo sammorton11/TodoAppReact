@@ -35,7 +35,6 @@ const UpdateNoteForm = ({ noteId, BASE_URL }) => {
 		axios
 			.put(`${BASE_URL}api/TodoApp/UpdateNote?id=${noteId}`, data)
 			.then((response) => {
-				console.log('Update response:', response.data);
 				alert(response.data);
 				navigateHome();
 			})
@@ -105,7 +104,7 @@ const UpdateNoteForm = ({ noteId, BASE_URL }) => {
 						<Button color="primary" onPress={updateNote}>
 							Update
 						</Button>
-						<Spacer css={{ marginTop: '15px' }} ></Spacer>
+						<Spacer css={{ marginTop: '15px' }}></Spacer>
 						<Button color="abort" onPress={navigateHome}>Cancel</Button>
 					</Row>
 				</Grid>
